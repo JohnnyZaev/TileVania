@@ -16,12 +16,16 @@ public class Player : MonoBehaviour
 	private Vector3 _playerScale;
 	private Animator _playerAnimator;
 	private readonly int _isRunning = Animator.StringToHash("IsRunning");
+	private Collider2D _playerCollider;
+	private int _groundLayerMask;
 
 	private void Start()
 	{
 		_playerScale = transform.localScale;
 		_playerRb = GetComponent<Rigidbody2D>();
 		_playerAnimator = GetComponent<Animator>();
+		_playerCollider = GetComponent<Collider2D>();
+		_groundLayerMask = LayerMask.GetMask("Ground");
 	}
 
 	private void Update()
@@ -46,7 +50,7 @@ public class Player : MonoBehaviour
 
 	private void Jump()
 	{
-		if (Input.GetButtonDown("Jump"))
+		if (Input.GetButtonDown("Jump") && _playerCollider.IsTouchingLayers(_groundLayerMask))
 		{
 			_playerVelocity.y = playerJumpSpeed;
 			_playerRb.velocity = _playerVelocity;
