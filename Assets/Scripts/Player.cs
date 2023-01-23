@@ -4,6 +4,7 @@ public class Player : MonoBehaviour
 {
 	//config
 	[SerializeField] private float playerSpeed = 5f;
+	[SerializeField] private float playerJumpSpeed = 25f;
 
 	// State
 	private bool _isAlive = true;
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour
 	private void Update()
 	{
 		Run();
+		Jump();
 		FlipSprite();
 	}
 
@@ -40,6 +42,15 @@ public class Player : MonoBehaviour
 
 		bool playerHasHorizontalSpeed = Mathf.Abs(velocity.x) > Mathf.Epsilon;
 		_playerAnimator.SetBool(_isRunning, playerHasHorizontalSpeed);
+	}
+
+	private void Jump()
+	{
+		if (Input.GetButtonDown("Jump"))
+		{
+			_playerVelocity.y = playerJumpSpeed;
+			_playerRb.velocity = _playerVelocity;
+		}
 	}
 
 	private void FlipSprite()
