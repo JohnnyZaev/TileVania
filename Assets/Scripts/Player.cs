@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
 	private Animator _playerAnimator;
 	private readonly int _isRunning = Animator.StringToHash("IsRunning");
 	private readonly int _isClimbing = Animator.StringToHash("IsClimbing");
-	private Collider2D _playerCollider;
+	private BoxCollider2D _playerBoxCollider2D;
 	private int _groundLayerMask;
 	private float _gravityScaleAtStart;
 
@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
 		_playerScale = transform.localScale;
 		_playerRb = GetComponent<Rigidbody2D>();
 		_playerAnimator = GetComponent<Animator>();
-		_playerCollider = GetComponent<Collider2D>();
+		_playerBoxCollider2D = GetComponent<BoxCollider2D>();
 		_groundLayerMask = LayerMask.GetMask("Ground");
 		_gravityScaleAtStart = _playerRb.gravityScale;
 	}
@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
 
 	private void ClimbLadder()
 	{
-		if (!_playerCollider.IsTouchingLayers(LayerMask.GetMask("Climbing")))
+		if (!_playerBoxCollider2D.IsTouchingLayers(LayerMask.GetMask("Climbing")))
 		{
 			_playerRb.gravityScale = _gravityScaleAtStart;
 			_playerAnimator.SetBool(_isClimbing, false);
@@ -73,7 +73,7 @@ public class Player : MonoBehaviour
 
 	private void Jump()
 	{
-		if (Input.GetButtonDown("Jump") && _playerCollider.IsTouchingLayers(_groundLayerMask))
+		if (Input.GetButtonDown("Jump") && _playerBoxCollider2D.IsTouchingLayers(_groundLayerMask))
 		{
 			_playerVelocity.y = playerJumpSpeed;
 			_playerRb.velocity = _playerVelocity;
