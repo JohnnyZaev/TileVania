@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private float playerSpeed = 5f;
 	[SerializeField] private float playerJumpSpeed = 25f;
 	[SerializeField] private float climbSpeed = 5f;
+	[SerializeField] private Vector2 dyingKick = new Vector2(25f, 25f);
 
 	// State
 	private bool _isAlive = true;
@@ -23,6 +24,7 @@ public class Player : MonoBehaviour
 	private int _groundLayerMask;
 	private int _enemyLayerMask;
 	private float _gravityScaleAtStart;
+	private static readonly int Dying = Animator.StringToHash("Dying");
 
 	private void Start()
 	{
@@ -52,6 +54,8 @@ public class Player : MonoBehaviour
 	{
 		if (_playerBodyCollider2D.IsTouchingLayers(_enemyLayerMask))
 		{
+			_playerAnimator.SetTrigger(Dying);
+			_playerRb.velocity = dyingKick;
 			_isAlive = false;
 		}
 	}
