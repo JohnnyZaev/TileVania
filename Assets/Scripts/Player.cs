@@ -18,8 +18,10 @@ public class Player : MonoBehaviour
 	private Animator _playerAnimator;
 	private readonly int _isRunning = Animator.StringToHash("IsRunning");
 	private readonly int _isClimbing = Animator.StringToHash("IsClimbing");
-	private BoxCollider2D _playerBoxCollider2D;
+	private CapsuleCollider2D _playerBodyCollider2D;
+	private BoxCollider2D _playerFeetCollider2D;
 	private int _groundLayerMask;
+	private int _enemyLayerMask;
 	private float _gravityScaleAtStart;
 
 	private void Start()
@@ -27,19 +29,32 @@ public class Player : MonoBehaviour
 		_playerScale = transform.localScale;
 		_playerRb = GetComponent<Rigidbody2D>();
 		_playerAnimator = GetComponent<Animator>();
-		_playerBoxCollider2D = GetComponent<BoxCollider2D>();
+		_playerFeetCollider2D = GetComponent<BoxCollider2D>();
+		_playerBodyCollider2D = GetComponent<CapsuleCollider2D>();
 		_groundLayerMask = LayerMask.GetMask("Ground");
+		_enemyLayerMask = LayerMask.GetMask("Enemy");
 		_gravityScaleAtStart = _playerRb.gravityScale;
 	}
 
 	private void Update()
 	{
+		if (!_isAlive)
+			return;
 		Run();
 		Jump();
 		FlipSprite();
 		ClimbLadder();
+		Die();
 	}
 
+
+	private void Die()
+	{
+		if (_playerBodyCollider2D.IsTouchingLayers(_enemyLayerMask))
+		{
+			_isAlive = false;
+		}
+	}
 	private void Run()
 	{
 		_horizontalMovement = Input.GetAxis("Horizontal");
@@ -55,7 +70,7 @@ public class Player : MonoBehaviour
 
 	private void ClimbLadder()
 	{
-		if (!_playerBoxCollider2D.IsTouchingLayers(LayerMask.GetMask("Climbing")))
+		if (!_playerBodyCollider2D.IsTouchingLayers(LayerMask.GetMask("Climbing")))
 		{
 			_playerRb.gravityScale = _gravityScaleAtStart;
 			_playerAnimator.SetBool(_isClimbing, false);
@@ -73,7 +88,7 @@ public class Player : MonoBehaviour
 
 	private void Jump()
 	{
-		if (Input.GetButtonDown("Jump") && _playerBoxCollider2D.IsTouchingLayers(_groundLayerMask))
+		if (Input.GetButtonDown("Jump") && _playerFeetCollider2D.IsTouchingLayers(_groundLayerMask))
 		{
 			_playerVelocity.y = playerJumpSpeed;
 			_playerRb.velocity = _playerVelocity;
