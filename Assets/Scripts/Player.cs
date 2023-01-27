@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
 		_playerFeetCollider2D = GetComponent<BoxCollider2D>();
 		_playerBodyCollider2D = GetComponent<CapsuleCollider2D>();
 		_groundLayerMask = LayerMask.GetMask("Ground");
-		_enemyLayerMask = LayerMask.GetMask("Enemy");
+		_enemyLayerMask = LayerMask.GetMask("Enemy", "Hazard");
 		_gravityScaleAtStart = _playerRb.gravityScale;
 	}
 
