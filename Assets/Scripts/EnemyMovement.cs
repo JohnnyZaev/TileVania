@@ -5,10 +5,12 @@ public class EnemyMovement : MonoBehaviour
 	[SerializeField] private float enemySpeed = 1f;
 
 	private Rigidbody2D _enemyRb;
+	private Vector3 _enemyLocalScale;
 
 	private void Start()
 	{
 		_enemyRb = GetComponent<Rigidbody2D>();
+		_enemyLocalScale = transform.localScale;
 	}
 
 	private void Update()
@@ -30,6 +32,7 @@ public class EnemyMovement : MonoBehaviour
 
 	private void OnTriggerExit2D(Collider2D other)
 	{
-		transform.localScale = new Vector3(-(Mathf.Sign(_enemyRb.velocity.x)), 1f, 1f);
+		_enemyLocalScale.x = -Mathf.Sign(_enemyRb.velocity.x);
+		transform.localScale = _enemyLocalScale;
 	}
 }

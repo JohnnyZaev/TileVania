@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
 	private BoxCollider2D _playerFeetCollider2D;
 	private int _groundLayerMask;
 	private int _enemyLayerMask;
+	private int _climbingLayerMask;
 	private float _gravityScaleAtStart;
 	private static readonly int Dying = Animator.StringToHash("Dying");
 
@@ -35,6 +36,7 @@ public class Player : MonoBehaviour
 		_playerBodyCollider2D = GetComponent<CapsuleCollider2D>();
 		_groundLayerMask = LayerMask.GetMask("Ground");
 		_enemyLayerMask = LayerMask.GetMask("Enemy", "Hazard");
+		_climbingLayerMask = LayerMask.GetMask("Climbing");
 		_gravityScaleAtStart = _playerRb.gravityScale;
 	}
 
@@ -74,7 +76,7 @@ public class Player : MonoBehaviour
 
 	private void ClimbLadder()
 	{
-		if (!_playerBodyCollider2D.IsTouchingLayers(LayerMask.GetMask("Climbing")))
+		if (!_playerBodyCollider2D.IsTouchingLayers(_climbingLayerMask))
 		{
 			_playerRb.gravityScale = _gravityScaleAtStart;
 			_playerAnimator.SetBool(_isClimbing, false);
@@ -92,20 +94,16 @@ public class Player : MonoBehaviour
 
 	private void Jump()
 	{
-		if (Input.GetButtonDown("Jump") && _playerFeetCollider2D.IsTouchingLayers(_groundLayerMask))
-		{
-			_playerVelocity.y = playerJumpSpeed;
-			_playerRb.velocity = _playerVelocity;
-		}
+		if (!Input.GetButtonDown("Jump") || !_playerFeetCollider2D.IsTouchingLayers(_groundLayerMask)) return;
+		_playerVelocity.y = playerJumpSpeed;
+		_playerRb.velocity = _playerVelocity;
 	}
 
 	private void FlipSprite()
 	{
-		bool playerHasHorizontalSpeed = Mathf.Abs(_playerRb.velocity.x) > Mathf.Epsilon;
-		if (playerHasHorizontalSpeed)
-		{
-			_playerScale.x = Mathf.Sign(_playerVelocity.x);
-			transform.localScale = _playerScale;
-		}
+		var playerHasHorizontalSpeed = Mathf.Abs(_playerRb.velocity.x) > Mathf.Epsilon;
+		if (!playerHasHorizontalSpeed) return;
+		_playerScale.x = Mathf.Sign(_playerVelocity.x);
+		transform.localScale = _playerScale;
 	}
 }
