@@ -9,7 +9,7 @@ public class Exit : MonoBehaviour
 		StartCoroutine(LoadNextLevel());
 	}
 
-	private IEnumerator LoadNextLevel()
+	private static IEnumerator LoadNextLevel()
 	{
 		Time.timeScale = 0.2f;
 		yield return new WaitForSecondsRealtime(2f);
