@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
 	private bool _isAlive = true;
 	
 	//cached
+	private GameSession _gameSession;
 	private float _horizontalMovement;
 	private Vector2 _playerVelocity;
 	private Rigidbody2D _playerRb;
@@ -29,6 +30,7 @@ public class Player : MonoBehaviour
 
 	private void Start()
 	{
+		_gameSession = FindObjectOfType<GameSession>();
 		_playerScale = transform.localScale;
 		_playerRb = GetComponent<Rigidbody2D>();
 		_playerAnimator = GetComponent<Animator>();
@@ -59,6 +61,7 @@ public class Player : MonoBehaviour
 			_playerAnimator.SetTrigger(Dying);
 			_playerRb.velocity = dyingKick;
 			_isAlive = false;
+			_gameSession.ProcessPlayerDeath();
 		}
 	}
 	private void Run()
