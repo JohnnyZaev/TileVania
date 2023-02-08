@@ -1,18 +1,46 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameSession : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	[SerializeField] private int playerLives = 3;
+	
+	private void Awake()
+	{
+		var numberOfGameSessions = FindObjectsOfType<GameSession>().Length;
+		if (numberOfGameSessions > 1)
+		{
+			GameObject o;
+			(o = gameObject).SetActive(false);
+			Destroy(o);
+		}
+		else
+		{
+			DontDestroyOnLoad(gameObject);
+		}
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	public void ProcessPlayerDeath()
+	{
+		if (playerLives > 1)
+		{
+			TakeLife();
+		}
+		else
+		{
+			ResetGameSession();
+		}
+	}
+
+	private void TakeLife()
+	{
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+		playerLives--;
+	}
+
+	private void ResetGameSession()
+	{
+		SceneManager.LoadScene(0);
+		Destroy(gameObject);
+	}
 }
