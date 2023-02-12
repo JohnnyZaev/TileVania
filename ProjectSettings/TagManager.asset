@@ -18,7 +18,7 @@ TagManager:
   - Enemy
   - Hazard
   - Exit
-  - 
+  - Collectable
   - 
   - 
   - 
@@ -49,6 +49,9 @@ TagManager:
     locked: 0
   - name: Hazard
     uniqueID: 54631543
+    locked: 0
+  - name: Collectable
+    uniqueID: 4076485421
     locked: 0
   - name: Enemy
     uniqueID: 1461140859
