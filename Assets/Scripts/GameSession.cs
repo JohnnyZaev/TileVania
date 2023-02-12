@@ -1,9 +1,15 @@
+using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameSession : MonoBehaviour
 {
 	[SerializeField] private int playerLives = 3;
+	[SerializeField] private TMP_Text livesText;
+	[SerializeField] private TMP_Text scoreText;
+
+	private int _currentScore;
 	
 	private void Awake()
 	{
@@ -18,6 +24,12 @@ public class GameSession : MonoBehaviour
 		{
 			DontDestroyOnLoad(gameObject);
 		}
+	}
+
+	private void Start()
+	{
+		livesText.text = playerLives.ToString();
+		scoreText.text = _currentScore.ToString();
 	}
 
 	public void ProcessPlayerDeath()
@@ -36,6 +48,7 @@ public class GameSession : MonoBehaviour
 	{
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		playerLives--;
+		livesText.text = playerLives.ToString();
 	}
 
 	private void ResetGameSession()
